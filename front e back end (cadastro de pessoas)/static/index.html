@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Cadastro de Pessoas</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f2f2f2;
+            padding: 30px;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: auto;
+            background: white;
+            padding: 25px;
+            border-radius: 8px;
+        }
+
+        h1, h2 {
+            margin-top: 0;
+        }
+
+        input {
+            padding: 10px;
+            margin: 5px 5px 5px 0;
+        }
+
+        button {
+            padding: 10px;
+            cursor: pointer;
+        }
+
+        table {
+            width: 100%;
+            margin-top: 20px;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+            text-align: left;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>Cadastro de Pessoas</h1>
+
+    <input id="nome" type="text" placeholder="Nome">
+    <input id="cidade" type="text" placeholder="Cidade">
+    <input id="email" type="text" placeholder="Email">
+
+    <button onclick="salvar()">Salvar</button>
+
+    <h2>Pessoas cadastradas</h2>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Cidade</th>
+                <th>Email</th>
+                <th>Ações</th>
+                
+            </tr>
+        </thead>
+
+        <tbody id="lista"></tbody>
+    </table>
+
+</div>
+
+<script>
+let idEditando = null;
+
+
+async function carregar() {
+    const resposta = await fetch("/pessoas");
+    const pessoas = await resposta.json();
+
+    const lista = document.getElementById("lista");
+    lista.innerHTML = "";
+
+    pessoas.forEach(pessoa => {
+        const linha = document.createElement("tr");
+
+        const tdNome = document.createElement("td");
+        tdNome.textContent = pessoa.nome;
+
+        const tdCidade = document.createElement("td");
+        tdCidade.textContent = pessoa.cidade;
+
+        const tdEmail = document.createElement("td");
+        tdEmail.textContent = pessoa.email;
+
+        const tdAcoes = document.createElement("td");
+
+        const btnEditar = document.createElement("button");
+        btnEditar.textContent = "Editar";
+        btnEditar.onclick = () => editar(pessoa.id, pessoa.nome, pessoa.cidade, pessoa.email);
+
+        const btnExcluir = document.createElement("button");
+        btnExcluir.textContent = "Excluir";
+        btnExcluir.onclick = () => excluir(pessoa.id);
+
+        tdAcoes.appendChild(btnEditar);
+        tdAcoes.appendChild(document.createTextNode(" "));
+        tdAcoes.appendChild(btnExcluir);
+
+        linha.appendChild(tdNome);
+        linha.appendChild(tdCidade);
+        linha.appendChild(tdEmail);
+        linha.appendChild(tdAcoes);
+
+        lista.appendChild(linha);
+    });
+}
+
+
+async function salvar() {
+    const nome = document.getElementById("nome").value.trim();
+    const cidade = document.getElementById("cidade").value.trim();
+    const email = document.getElementById("email").value.trim();
+
+    if (!nome || !cidade || !email) {
+        alert("Preencha nome, cidade e email.");
+        return;
+    }
+
+    const dados = {
+        nome: nome,
+        cidade: cidade,
+        email: email
+    };
+
+    if (idEditando === null) {
+        await fetch("/pessoas", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(dados)
+        });
+    } else {
+        await fetch("/pessoas/" + idEditando, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(dados)
+        });
+
+        idEditando = null;
+    }
+
+    document.getElementById("nome").value = "";
+    document.getElementById("cidade").value = "";
+    document.getElementById("email").value = "";
+
+    carregar();
+}
+
+
+function editar(id, nome, cidade, email) {
+    idEditando = id;
+
+    document.getElementById("nome").value = nome;
+    document.getElementById("cidade").value = cidade;
+    document.getElementById("email").value = email;
+}
+
+
+async function excluir(id) {
+    const confirmar = confirm("Deseja realmente excluir esta pessoa?");
+
+    if (!confirmar) {
+        return;
+    }
+
+    await fetch("/pessoas/" + id, {
+        method: "DELETE"
+    });
+
+    carregar();
+}
+
+
+carregar();
+</script>
+
+</body>
+</html>
