@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Cadastro de Pessoas</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f2f2f2;
+            padding: 30px;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: auto;
+            background: white;
+            padding: 25px;
+            border-radius: 8px;
+        }
+
+        h1, h2 {
+            margin-top: 0;
+        }
+
+        input {
+            padding: 10px;
+            margin: 5px 5px 5px 0;
+        }
+
+        button {
+            padding: 10px;
+            cursor: pointer;
+        }
+
+        table {
+            width: 100%;
+            margin-top: 20px;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+            text-align: left;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>Cadastro de Pessoas</h1>
+
+    <input id="nome" type="text" placeholder="Nome">
+    <input id="cidade" type="text" placeholder="Cidade">
+    <input id="email" type="text" placeholder="Email">
+    <input id="telefone" type="text" placeholder="Telefone">
+    <input id="rua" type="text" placeholder="Rua">
+    <input id="numero_casa" type="text" placeholder="Numero Casa">
+    <input id="complemento" type="text" placeholder="Complemento">
+    <input id="bairro" type="text" placeholder="Bairro">
+    <input id="cep" type="text" placeholder="Cep">
+
+    <button onclick="salvar()">Salvar</button>
+
+    <h2>Pessoas cadastradas</h2>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Cidade</th>
+                <th>E-mail</th>
+                <th>Telefone</th>
+                <th>Rua</th>
+                <th>Numero Casa</th>
+                <th>Complemento</th>
+                <th>Bairro</th>
+                <th>Cep</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+
+        <tbody id="lista"></tbody>
+    </table>
+
+</div>
+
+<script>
+
+let idEditando = null;
+
+
+async function carregar() {
+
+    const resposta = await fetch("/pessoas");
+    const pessoas = await resposta.json();
+
+    const lista = document.getElementById("lista");
+
+    lista.innerHTML = "";
+
+    pessoas.forEach(pessoa => {
+
+        const linha = document.createElement("tr");
+
+        const tdNome = document.createElement("td");
+        tdNome.textContent = pessoa.nome;
+
+        const tdCidade = document.createElement("td");
+        tdCidade.textContent = pessoa.cidade;
+
+        const tdEmail = document.createElement("td");
+        tdEmail.textContent = pessoa.email;
+
+        const tdTelefone = document.createElement("td");
+        tdTelefone.textContent = pessoa.telefone;
+
+        const tdRua = document.createElement("td");
+        tdRua.textContent = pessoa.rua;
+
+        const tdNumeroCasa = document.createElement("td");
+        tdNumeroCasa.textContent = pessoa.numero_casa;
+
+        const tdComplemento = document.createElement("td");
+        tdComplemento.textContent = pessoa.complemento;
+
+        const tdBairro = document.createElement("td");
+        tdBairro.textContent = pessoa.bairro;
+
+        const tdCep = document.createElement("td");
+        tdCep.textContent = pessoa.cep;
+
+
+        const tdAcoes = document.createElement("td");
+
+        const btnEditar = document.createElement("button");
+
+        btnEditar.textContent = "Editar";
+
+    btnEditar.onclick = () => editar(pessoa.id,pessoa.nome,pessoa.cidade,pessoa.email,pessoa.telefone,pessoa.rua,pessoa.numero_casa,pessoa.complemento,pessoa.bairro,pessoa.cep);
+        
+
+
+        const btnExcluir = document.createElement("button");
+
+        btnExcluir.textContent = "Excluir";
+
+        btnExcluir.onclick = () => excluir(pessoa.id);
+
+
+        tdAcoes.appendChild(btnEditar);
+        tdAcoes.appendChild(document.createTextNode(" "));
+        tdAcoes.appendChild(btnExcluir);
+        linha.appendChild(tdNome);
+        linha.appendChild(tdCidade);
+        linha.appendChild(tdEmail);
+        linha.appendChild(tdTelefone);
+        linha.appendChild(tdRua);
+        linha.appendChild(tdNumeroCasa);
+        linha.appendChild(tdComplemento);
+        linha.appendChild(tdBairro);
+        linha.appendChild(tdCep);
+        linha.appendChild(tdAcoes);
+
+
+        lista.appendChild(linha);
+
+    });
+}
+
+
+async function salvar() {
+
+    const nome = document.getElementById("nome").value.trim();
+    const cidade = document.getElementById("cidade").value.trim();
+    const email = document.getElementById("email").value.trim();
+    const telefone = document.getElementById("telefone").value.trim();
+    const rua = document.getElementById("rua").value.trim();
+    const numero_casa = document.getElementById("numero_casa").value.trim();
+    const complemento = document.getElementById("complemento").value.trim();
+    const bairro = document.getElementById("bairro").value.trim();
+    const cep = document.getElementById("cep").value.trim();
+
+
+    if (!nome || !cidade || !email || !telefone || !rua || !numero_casa || !complemento || !bairro || !cep) {
+
+        alert("Preencha todos os campos.");
+
+        return;
+    }
+
+
+    const dados = {
+
+        nome: nome,
+        cidade: cidade,
+        email: email,
+        telefone: telefone,
+        rua: rua,
+        numero_casa: numero_casa,
+        complemento: complemento,
+        bairro: bairro,
+        cep: cep
+
+    };
+
+
+    if (idEditando === null) {
+
+        await fetch("/pessoas", {
+
+            method: "POST",
+
+            headers: {
+                "Content-Type": "application/json"
+            },
+
+            body: JSON.stringify(dados)
+
+        });
+
+    } else {
+
+        await fetch("/pessoas/" + idEditando, {
+
+            method: "PUT",
+
+            headers: {
+                "Content-Type": "application/json"
+            },
+
+            body: JSON.stringify(dados)
+
+        });
+
+        idEditando = null;
+    }
+
+
+    document.getElementById("nome").value = "";
+    document.getElementById("cidade").value = "";
+    document.getElementById("email").value = "";
+    document.getElementById("telefone").value = "";
+    document.getElementById("rua").value = "";
+    document.getElementById("numero_casa").value = "";
+    document.getElementById("complemento").value = "";
+    document.getElementById("bairro").value = "";
+    document.getElementById("cep").value = "";
+
+    carregar();
+}
+
+
+function editar(id,nome,cidade,email,telefone,rua,numero_casa,complemento,bairro,cep) {
+
+    idEditando = id;
+
+    document.getElementById("nome").value = nome;
+    document.getElementById("cidade").value = cidade;
+    document.getElementById("email").value = email;
+    document.getElementById("telefone").value = telefone;
+    document.getElementById("rua").value = rua;
+    document.getElementById("numero_casa").value = numero_casa;
+    document.getElementById("complemento").value = complemento;
+    document.getElementById("bairro").value = bairro;
+    document.getElementById("cep").value = cep;
+}
+
+
+async function excluir(id) {
+
+    const confirmar = confirm("Deseja realmente excluir esta pessoa?");
+
+    if (!confirmar) {
+        return;
+    }
+
+
+    await fetch("/pessoas/" + id, {
+
+        method: "DELETE"
+
+    });
+
+
+    carregar();
+}
+
+
+carregar();
+
+</script>
+
+</body>
+
+</html>
