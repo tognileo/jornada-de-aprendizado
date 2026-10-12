@@ -1,74 +1,44 @@
 # Meu Dia
 
-Sistema web responsivo para gerenciamento de rotinas diárias.
-Esta é a **Etapa 01 — Fundação técnica**: só a base do projeto, sem telas nem regras de negócio.
+Plataforma web de organização pessoal: ajuda o usuário a planejar, priorizar e cumprir o dia de acordo com o tempo que realmente possui.
 
-## Objetivo
+## Onde o projeto está
+- **Etapa 01 - Fundação técnica:** FastAPI + MySQL `agenda` + `/health` + `/health/database` + testes.
+- **Etapa 02 - Modelagem do banco:** tabelas `usuarios` e `tarefas` (scripts na pasta `sql/`).
+- **Etapa 03 - Backend de usuários (em andamento):** cadastro pronto (`POST /usuarios`). Faltam login e perfil.
 
-Ajudar o usuário a organizar o dia, definir prioridades e saber se as atividades cabem no tempo disponível (funcionalidades das próximas etapas).
+## Como rodar (PowerShell, dentro da pasta do projeto)
 
-## Tecnologias
+1. Crie o banco e as tabelas no MySQL (phpMyAdmin ou Workbench), rodando nesta ordem:
+   - `sql/01_criar_database.sql`
+   - `sql/02_criar_tabelas.sql`
 
-- Python + FastAPI
-- MySQL (SQLAlchemy 2.x + PyMySQL)
-- pydantic-settings (configuração via `.env`)
-- pytest + httpx (testes)
-- Frontend futuro: HTML, CSS e JavaScript puro
+2. Copie `.env.example` para `.env` e preencha usuário/senha do seu MySQL:
 
-## Estrutura inicial
+       copy .env.example .env
 
-```
-C:\agenda
-├── app
-│   ├── main.py            # aplicação FastAPI
-│   ├── core/config.py     # configurações (.env)
-│   ├── database/connection.py  # engine e sessão do MySQL
-│   ├── models/
-│   ├── schemas/
-│   ├── routes/health.py   # rotas /health e /health/database
-│   └── services/
-├── tests/test_health.py
-├── .env            # NÃO vai para o Git
-├── .env.example    # modelo do .env
-├── .gitignore
-├── requirements.txt
-└── README.md
-```
+3. Instale as dependências:
 
-## Banco de dados
+       pip install -r requirements.txt
 
-Database obrigatório: **agenda** (já existente no MySQL local).
-Nesta etapa nenhuma tabela é criada ou alterada.
+4. Inicie o servidor:
 
-## Configurando o .env
+       python -m uvicorn app.main:app --reload
 
-1. Copie o modelo: `copy .env.example .env`
-2. Abra o `.env` e preencha `DB_USER` e `DB_PASSWORD` com os dados do MySQL do seu computador.
-3. Mantenha `DB_NAME=agenda`.
+5. Abra no navegador:
+   - http://localhost:8000/health
+   - http://localhost:8000/health/database
+   - http://localhost:8000/docs  (aqui dá para testar o `POST /usuarios`)
 
-O `.env` nunca deve ser enviado ao GitHub.
+## Testes
 
-## Instalando as dependências
+    python -m pytest
 
-```
-pip install -r requirements.txt
-```
+## Segurança
+- O arquivo `.env` nunca deve ir para o Git.
+- A senha nunca é guardada em texto puro: só o hash (`senha_hash`).
+- A API nunca devolve senha.
 
-## Executando a aplicação
-
-```
-uvicorn app.main:app --reload
-```
-
-## Executando os testes
-
-```
-pytest
-```
-
-## URLs locais
-
-- Aplicação: http://127.0.0.1:8000
-- Swagger: http://127.0.0.1:8000/docs
-- Health: http://127.0.0.1:8000/health
-- Health do banco: http://127.0.0.1:8000/health/database
+## Site (frontend)
+Com o servidor rodando, abra http://localhost:8000 : cadastro/login, Meu Dia, Minhas tarefas.
+Adicione `SECRET_KEY=` (um texto longo e aleatório) no seu `.env`.

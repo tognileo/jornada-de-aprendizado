@@ -1,16 +1,9 @@
-"""Conexão com o MySQL (database: agenda).
-
-Nesta etapa apenas PREPARAMOS a conexão.
-Não criamos tabelas (nada de Base.metadata.create_all).
-"""
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, text
 from sqlalchemy.engine import URL
-from sqlalchemy.orm import DeclarativeBase, sessionmaker
 
 from app.core.config import settings
 
-# URL.create trata caracteres especiais da senha automaticamente.
-DATABASE_URL = URL.create(
+url_do_banco = URL.create(
     drivername="mysql+pymysql",
     username=settings.db_user,
     password=settings.db_password,
@@ -19,11 +12,13 @@ DATABASE_URL = URL.create(
     database=settings.db_name,
 )
 
-engine = create_engine(DATABASE_URL, pool_pre_ping=True)
-
-SessionLocal = sessionmaker(bind=engine, autoflush=False, autocommit=False)
+engine = create_engine(url_do_banco, pool_pre_ping=True)
 
 
-class Base(DeclarativeBase):
-    """Base para os models das próximas etapas."""
-    pass
+def testar_conexao() -> bool:
+    try:
+        with engine.connect() as conexao:
+            conexao.execute(text("SELECT 1"))
+        return True
+    except Exception:
+        return False

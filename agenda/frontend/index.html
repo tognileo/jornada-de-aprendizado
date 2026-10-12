@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Meu Dia</title>
+<style>
+:root{--bg:#eef2f1;--card:#fff;--ink:#17313a;--mut:#5d7279;--line:#d5dfdd;--teal:#1f7a6d;--tealb:#d8ece8;--amber:#e8a33d;--red:#c4513d}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 "Segoe UI",system-ui,sans-serif}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer;border:1px solid var(--line);background:var(--card);border-radius:8px;padding:.5rem .9rem}
+button.p{background:var(--teal);border-color:var(--teal);color:#fff}button.g{border:0;background:none;color:var(--mut);padding:.3rem .5rem}
+:focus-visible{outline:3px solid var(--amber);outline-offset:2px}
+input,select,textarea{width:100%;padding:.5rem .6rem;border:1px solid var(--line);border-radius:8px;background:#fff}
+label{display:block;margin:.7rem 0 .2rem;font-size:.9rem;color:var(--mut)}
+header{display:flex;flex-wrap:wrap;gap:.6rem;align-items:center;padding:.8rem 1.2rem;background:var(--ink);color:#fff}
+header b{font-size:1.3rem;margin-right:auto}header nav button{background:none;border:0;color:#cfe3df}header nav button.on{color:#fff;box-shadow:inset 0 -3px var(--amber);border-radius:0}
+main{max-width:860px;margin:0 auto;padding:1rem}.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:1rem;margin-bottom:1rem}
+h2{margin:.2rem 0 .6rem;font-size:1.25rem}.row{display:flex;flex-wrap:wrap;gap:.6rem;align-items:center}.row>*{flex:0 0 auto}
+.bar{display:flex;height:34px;border-radius:8px;overflow:hidden;background:var(--tealb);border:1px solid var(--line);margin:.7rem 0}
+.bar i{display:block;min-width:3px;border-right:2px solid #fff}.bar .over{background:repeating-linear-gradient(45deg,var(--amber),var(--amber) 6px,#f6cf8c 6px,#f6cf8c 12px)}
+.msg{font-weight:600}.msg.bad{color:#9a5b00}.msg.ok{color:var(--teal)}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:.6rem;margin-top:.6rem}.stats div{background:var(--bg);border-radius:8px;padding:.5rem .7rem}.stats strong{display:block;font-size:1.3rem}
+.t{display:flex;gap:.7rem;align-items:center;border:1px solid var(--line);border-left:6px solid var(--line);border-radius:8px;padding:.6rem .8rem;margin:.5rem 0;background:#fff}
+.t.alta{border-left-color:var(--red)}.t.media{border-left-color:var(--amber)}.t.baixa{border-left-color:var(--teal)}.t.concluida{opacity:.55}.t.concluida .tt{text-decoration:line-through}
+.t .info{flex:1;min-width:0}.tt{font-weight:600}.sm{font-size:.85rem;color:var(--mut)}.late{color:var(--red);font-weight:600}
+.big{display:flex;gap:.7rem;flex-wrap:wrap}.big button{flex:1 1 220px;padding:.9rem}
+dialog{border:0;border-radius:12px;padding:1.2rem;width:min(460px,92vw)}dialog::backdrop{background:#0008}
+#auth{max-width:380px;margin:8vh auto}#toast{position:fixed;bottom:1rem;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:.6rem 1rem;border-radius:8px;display:none}
+.hide{display:none!important}.tabs button.on{background:var(--tealb);border-color:var(--teal)}
+@media (prefers-reduced-motion:no-preference){.bar i{transition:width .4s}}
+</style>
+</head>
+<body>
+<section id="auth" class="card">
+  <h2>Meu Dia</h2><p class="sm">Organize o dia pelo tempo que você realmente tem.</p>
+  <div class="row tabs"><button class="on" data-m="login">Entrar</button><button data-m="cad">Criar conta</button></div>
+  <form id="fa" onsubmit="return false">
+    <div id="fnome" class="hide"><label for="an">Nome</label><input id="an" autocomplete="name"></div>
+    <label for="ae">E-mail</label><input id="ae" type="email" autocomplete="email">
+    <label for="as">Senha (mínimo 8 caracteres)</label><input id="as" type="password" autocomplete="current-password">
+    <p><button class="p" id="abtn" style="width:100%">Entrar</button></p>
+  </form>
+</section>
+
+<div id="app" class="hide">
+<header><b>Meu Dia</b>
+  <nav><button data-v="dia" class="on">Meu dia</button><button data-v="lista">Minhas tarefas</button></nav>
+  <button class="p" id="nova">+ Nova tarefa</button><span class="sm" id="quem" style="color:#cfe3df"></span><button class="g" id="sair" style="color:#cfe3df">Sair</button>
+</header>
+<main>
+<div id="v-dia">
+  <div class="card">
+    <h2 id="data"></h2>
+    <div class="row"><label for="h" style="margin:0">Tempo disponível hoje</label><input id="h" type="number" min="0" max="24" value="4" style="width:70px"> h
+      <input id="m" type="number" min="0" max="59" value="0" step="5" style="width:70px"> min</div>
+    <div class="bar" id="bar" role="img" aria-label="Tempo planejado comparado ao disponível"></div>
+    <div class="msg" id="msg"></div>
+    <div class="stats" id="stats"></div>
+  </div>
+  <div class="big"><button class="p" id="agora">O que faço agora?</button><button id="controle">Meu dia saiu do controle</button></div>
+  <div class="card" style="margin-top:1rem"><h2>Tarefas de hoje</h2><div id="hoje"></div></div>
+</div>
+<div id="v-lista" class="hide"><div class="card"><div class="row tabs" id="filtros"></div><div id="todas" style="margin-top:.6rem"></div></div></div>
+</main></div>
+
+<dialog id="dlg"><form id="ft" method="dialog"><h2 id="dt">Nova tarefa</h2>
+  <label for="tt">Título</label><input id="tt" required maxlength="150">
+  <label for="td">Descrição (opcional)</label><textarea id="td" rows="2"></textarea>
+  <div class="row"><div style="flex:1"><label for="tc">Categoria</label><input id="tc" maxlength="50" placeholder="Estudos, casa..."></div>
+  <div style="flex:1"><label for="tp">Prioridade</label><select id="tp"><option value="baixa">Baixa</option><option value="media" selected>Média</option><option value="alta">Alta</option></select></div></div>
+  <div class="row"><div style="flex:1"><label for="tdt">Data</label><input id="tdt" type="date" required></div>
+  <div style="flex:1"><label for="tm">Tempo estimado (min)</label><input id="tm" type="number" min="0" max="1440" step="5" value="30"></div></div>
+  <p class="row"><button class="p" id="salvar" value="x">Salvar</button><button type="button" id="cancelar">Cancelar</button></p></form></dialog>
+<dialog id="info"><div id="infoc"></div><p class="row"><button class="p" id="infook">Fechar</button></p></dialog>
+<div id="toast" role="status"></div>
+
+<script>
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+let token=localStorage.getItem('token'), tarefas=[], editId=null, modo='login', filtro='todas';
+const hoje=()=>new Date().toLocaleDateString('sv'), amanha=()=>{const d=new Date();d.setDate(d.getDate()+1);return d.toLocaleDateString('sv')};
+const fmt=m=>m<60?m+'min':Math.floor(m/60)+'h'+(m%60?String(m%60).padStart(2,'0'):'');
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const PESO={alta:3,media:2,baixa:1};
+function toast(t){const e=$('#toast');e.textContent=t;e.style.display='block';setTimeout(()=>e.style.display='none',3200)}
+async function api(url,metodo='GET',corpo){
+  const r=await fetch(url,{method:metodo,headers:{'Content-Type':'application/json',Authorization:'Bearer '+token},body:corpo?JSON.stringify(corpo):undefined});
+  if(r.status===401&&token&&!url.includes('login')){sair();throw new Error('Sessão expirada.')}
+  if(r.status===204)return null;
+  const d=await r.json().catch(()=>({}));
+  if(!r.ok)throw new Error(typeof d.detail==='string'?d.detail:'Confira os dados informados.');
+  return d;
+}
+/* ---------- login ---------- */
+$$('#auth .tabs button').forEach(b=>b.onclick=()=>{modo=b.dataset.m;$$('#auth .tabs button').forEach(x=>x.classList.toggle('on',x===b));
+  $('#fnome').classList.toggle('hide',modo==='login');$('#abtn').textContent=modo==='login'?'Entrar':'Criar conta'});
+$('#fa').onsubmit=async()=>{try{
+  if(modo==='cad')await api('/usuarios','POST',{nome:$('#an').value,email:$('#ae').value,senha:$('#as').value});
+  const d=await api('/auth/login','POST',{email:$('#ae').value,senha:$('#as').value});
+  token=d.token;localStorage.setItem('token',token);$('#quem').textContent=d.usuario.nome;entrar();
+}catch(e){toast(e.message)}return false};
+function sair(){token=null;localStorage.removeItem('token');$('#app').classList.add('hide');$('#auth').classList.remove('hide')}
+$('#sair').onclick=sair;
+async function entrar(){$('#auth').classList.add('hide');$('#app').classList.remove('hide');
+  try{const u=await api('/auth/eu');$('#quem').textContent=u.nome;await carregar()}catch(e){toast(e.message)}}
+async function carregar(){tarefas=await api('/tarefas');desenhar()}
+/* ---------- regras do dia ---------- */
+const atrasada=t=>t.status!=='concluida'&&t.data_prevista<hoje();
+const doDia=()=>tarefas.filter(t=>t.data_prevista===hoje()||atrasada(t));
+const disp=()=>(+$('#h').value||0)*60+(+$('#m').value||0);
+function pontos(t,restante){return (t.status==='em_andamento'?100:0)+PESO[t.prioridade]*10+(atrasada(t)?15:0)+(t.tempo_estimado_min<=restante?5:0)-t.tempo_estimado_min/60}
+function desenhar(){
+  $('#data').textContent=new Date().toLocaleDateString('pt-BR',{weekday:'long',day:'numeric',month:'long'});
+  const dia=doDia(), feitas=dia.filter(t=>t.status==='concluida'), alta=dia.filter(t=>t.prioridade==='alta');
+  const plan=dia.reduce((s,t)=>s+t.tempo_estimado_min,0), D=disp(), total=Math.max(plan,D,1);
+  $('#bar').innerHTML=dia.map(t=>`<i title="${esc(t.titulo)} (${fmt(t.tempo_estimado_min)})" style="width:${t.tempo_estimado_min/total*100}%;background:${t.status==='concluida'?'#9bc3bb':'var(--teal)'}"></i>`).join('')
+    +(plan<D?`<i style="width:${(D-plan)/total*100}%;background:transparent;border:0"></i>`:'')
+  ;if(plan>D){$('#bar').lastElementChild?.classList.add('over')}
+  const sobra=plan-D;
+  $('#msg').className='msg '+(sobra>0?'bad':'ok');
+  $('#msg').textContent=!dia.length?'Nenhuma tarefa para hoje. Aproveite ou planeje algo.':sobra>0?`Seu dia está sobrecarregado em ${fmt(sobra)}.`:`Cabe no seu dia. Sobram ${fmt(-sobra)} livres.`;
+  $('#stats').innerHTML=[['Concluídas',`${feitas.length} de ${dia.length}`],['Do dia',dia.length?Math.round(feitas.length/dia.length*100)+'%':'0%'],
+    ['Prioridades altas',`${alta.filter(t=>t.status==='concluida').length} de ${alta.length}`],['Tempo planejado',fmt(plan)]].map(([a,b])=>`<div><strong>${b}</strong><span class="sm">${a}</span></div>`).join('');
+  $('#hoje').innerHTML=dia.length?dia.map(card).join(''):'<p class="sm">Use "+ Nova tarefa" para começar.</p>';
+  $$('#filtros').forEach(f=>f.innerHTML=[['todas','Todas'],['pendente','Pendentes'],['concluida','Concluídas'],['atrasada','Atrasadas']].map(([k,n])=>`<button data-f="${k}" class="${k===filtro?'on':''}">${n}</button>`).join(''));
+  $$('#filtros button').forEach(b=>b.onclick=()=>{filtro=b.dataset.f;desenhar()});
+  const lista=tarefas.filter(t=>filtro==='todas'||(filtro==='atrasada'?atrasada(t):filtro==='pendente'?t.status!=='concluida':t.status===filtro));
+  $('#todas').innerHTML=lista.length?lista.map(card).join(''):'<p class="sm">Nada por aqui.</p>';
+}
+function card(t){
+  const acao=t.status==='concluida'?'':(t.status==='pendente'?`<button data-a="iniciar" data-id="${t.id}">Começar</button>`:'')+`<button class="p" data-a="concluir" data-id="${t.id}">Concluir</button>`;
+  return `<div class="t ${t.prioridade} ${t.status}"><div class="info"><div class="tt">${esc(t.titulo)}</div>
+  <div class="sm">${atrasada(t)?'<span class="late">atrasada · </span>':''}${t.data_prevista.split('-').reverse().join('/')} · ${fmt(t.tempo_estimado_min)} · ${t.prioridade}${t.categoria?' · '+esc(t.categoria):''}${t.status==='em_andamento'?' · em andamento':''}</div></div>
+  ${acao}<button class="g" data-a="editar" data-id="${t.id}" aria-label="Editar">Editar</button><button class="g" data-a="excluir" data-id="${t.id}" aria-label="Excluir">Excluir</button></div>`}
+document.addEventListener('click',async e=>{const b=e.target.closest('[data-a]');if(!b)return;const id=+b.dataset.id,a=b.dataset.a;
+  try{if(a==='iniciar'||a==='concluir'){await api(`/tarefas/${id}/${a}`,'POST');await carregar()}
+  else if(a==='excluir'){if(confirm('Excluir esta tarefa?')){await api('/tarefas/'+id,'DELETE');await carregar()}}
+  else if(a==='editar')abrir(tarefas.find(t=>t.id===id))}catch(err){toast(err.message)}});
+$$('#h,#m').forEach(i=>i.oninput=()=>{localStorage.setItem('disp'+hoje(),$('#h').value+':'+$('#m').value);desenhar()});
+const salvo=localStorage.getItem('disp'+hoje());if(salvo){[$('#h').value,$('#m').value]=salvo.split(':')}
+$$('header nav button').forEach(b=>b.onclick=()=>{$$('header nav button').forEach(x=>x.classList.toggle('on',x===b));$('#v-dia').classList.toggle('hide',b.dataset.v!=='dia');$('#v-lista').classList.toggle('hide',b.dataset.v!=='lista')});
+/* ---------- O que faço agora? / saiu do controle ---------- */
+function mostrar(html){$('#infoc').innerHTML=html;$('#info').showModal()}$('#infook').onclick=()=>$('#info').close();
+$('#agora').onclick=()=>{
+  const feito=doDia().filter(t=>t.status==='concluida').reduce((s,t)=>s+t.tempo_estimado_min,0), rest=Math.max(0,disp()-feito);
+  const t=doDia().filter(t=>t.status!=='concluida').sort((a,b)=>pontos(b,rest)-pontos(a,rest))[0];
+  if(!t)return mostrar('<h2>Tudo em dia</h2><p>Sem tarefas pendentes hoje. Descanse ou adiante algo.</p>');
+  mostrar(`<h2>Faça agora</h2><p class="tt">${esc(t.titulo)}</p><p class="sm">${fmt(t.tempo_estimado_min)} · prioridade ${t.prioridade}${atrasada(t)?' · atrasada':''}${t.status==='em_andamento'?' · já em andamento':''}</p>
+  <p>${atrasada(t)?'Está atrasada, então vem primeiro.':t.prioridade==='alta'?'É a de maior prioridade.':'É a que mais rende no tempo que você tem.'}</p>
+  ${t.status==='pendente'?`<button class="p" data-a="iniciar" data-id="${t.id}" onclick="$('#info').close()">Começar agora</button>`:''}`)};
+$('#controle').onclick=()=>mostrar(`<h2>Quanto tempo ainda resta?</h2><div class="row">${[30,60,120].map(m=>`<button onclick="controle(${m})">${fmt(m)}</button>`).join('')}</div>`);
+function controle(min){
+  const pend=doDia().filter(t=>t.status!=='concluida').sort((a,b)=>pontos(b,min)-pontos(a,min)); let uso=0;const fica=[],vai=[];
+  pend.forEach(t=>{if(uso+t.tempo_estimado_min<=min){uso+=t.tempo_estimado_min;fica.push(t)}else vai.push(t)});
+  const li=l=>l.map(t=>`<li>${esc(t.titulo)} <span class="sm">(${fmt(t.tempo_estimado_min)})</span></li>`).join('')||'<li class="sm">nenhuma</li>';
+  mostrar(`<h2>Com ${fmt(min)}, priorize:</h2><ul>${li(fica)}</ul><h2>Podem ficar para amanhã:</h2><ul>${li(vai)}</ul>
+  ${vai.length?`<button class="p" onclick="adiar([${vai.map(t=>t.id)}])">Passar para amanhã</button>`:''}`)}
+async function adiar(ids){try{for(const id of ids)await api('/tarefas/'+id,'PATCH',{data_prevista:amanha()});$('#info').close();await carregar();toast('Tarefas passadas para amanhã.')}catch(e){toast(e.message)}}
+/* ---------- nova / editar ---------- */
+function abrir(t){editId=t?.id??null;$('#dt').textContent=t?'Editar tarefa':'Nova tarefa';
+  $('#tt').value=t?.titulo||'';$('#td').value=t?.descricao||'';$('#tc').value=t?.categoria||'';$('#tp').value=t?.prioridade||'media';$('#tdt').value=t?.data_prevista||hoje();$('#tm').value=t?.tempo_estimado_min??30;$('#dlg').showModal()}
+$('#nova').onclick=()=>abrir();$('#cancelar').onclick=()=>$('#dlg').close();
+$('#ft').onsubmit=async e=>{e.preventDefault();const c={titulo:$('#tt').value.trim(),descricao:$('#td').value||null,categoria:$('#tc').value||null,prioridade:$('#tp').value,data_prevista:$('#tdt').value,tempo_estimado_min:+$('#tm').value||0};
+  try{editId?await api('/tarefas/'+editId,'PATCH',c):await api('/tarefas','POST',c);$('#dlg').close();await carregar()}catch(err){toast(err.message)}};
+if(token)entrar();
+</script>
+</body>
+</html>
