@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Urna</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1 id="titulo">Urna da Turma</h1>
+        <nav id ="nav-bar">
+            <button id = "votacao" class="aba ativa" data-tela="votacao">Votar</button>
+            <button id = "candidatos" class="aba" data-tela="candidatos">Candidatos</button>
+            <button id = "resultado" class="aba" data-tela="resultado">Resultado</button>
+            <hr>
+        </nav>
+    </header>
+
+    <main>
+        <section id="votacao" class="tela ativa">
+        <div class="urna">
+            <div class="visor">
+                <p class="rotulo">Digite o número do seu candidato</p>
+                <input type="text" id="numerovoto" maxlength="2" inputmode="numeric" autocomplete="off">
+                <div id="previa" class="previa"></div>
+            </div>
+
+            <div class="botoes-urna">
+                <button id="btnBranco" class="branco">Branco</button>
+                <button id="btnCorrige" class="corrige">Corrige</button>
+                <button id="btnConfirma" class="confirma">Confirma</button>
+            </div>
+        </div>
+        <div id="fim" class="fim">Fim</div>
+         </section>
+
+         <section id="candidatos" class="tela">
+            <h2>Cadastrar candidatos</h2>
+            <form id="formCandidato">
+                <input type="text" id="nomeCandidato" placeholder="Nome do aluno" required>
+                <input type="text" id="numeroCandidato" placeholder="NúMERO (ex:10)" maxlength="2" inputmode="numeric">
+                <button type="submit">Adicionar</button>
+            </form>
+
+            <h2>Candidatos cadastrados</h2>
+            <ul id="listaCandidatos"></ul>
+         </section>
+
+         <section id="resultado" class="tela">
+            <h2>Apuração</h2>
+            <p id="totalVotos"></p>
+            <div id="listaResultado"></div>
+            <button id="btnZerar" class="perigo">Zerar votos</button>
+         </section>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
