@@ -114,7 +114,7 @@ function atualizarPrevia() {
     if(candidato) {
         previa.innerHTML = `Candidato: <strong>${candidato.nome}</strong>`;
        } else {
-        previa.innerHTML = `<spán class="nulo">Número Errado - Voto Nulo</span>`;
+        previa.innerHTML = `<span class="nulo">Número Errado - Voto Nulo</span>`;
        } 
     }
 
@@ -150,7 +150,7 @@ function atualizarPrevia() {
     }
 
     function mostrarFim() {
-        urna.style.previa = "none";
+        urna.style.disp = "none";
         telaFim.style.display = "block";
 
 
@@ -182,11 +182,11 @@ function mostrarResultado() {
         const porcentagem = total > 0 ? ((item.qtd / total) * 100).toFixed(1) : 0;
         lista.innerHTML += `
         <div class="item-resultado">
-         <div class="linha">
-            <span>${item.nome}</nome>
-            <span>${item.qtd} voto(s) - ${porcentagem}%</span>
-        </div>
-        <div class="barra"><div style="width: ${porcentagem}%></div><div>
+            <div class="linha">
+                <span>${item.nome}</span>
+                <span>${item.qtd} voto(s) - ${porcentagem}%</span>
+            </div>
+            <div class="barra"><div style="width: ${porcentagem}%"></div></div>
         </div>`;
     });
 }

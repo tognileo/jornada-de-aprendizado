@@ -10,27 +10,32 @@
     <header>
         <h1 id="titulo">Urna da Turma</h1>
         <nav id ="nav-bar">
-            <button id = "votacao" class="aba ativa" data-tela="votacao">Votar</button>
-            <button id = "candidatos" class="aba" data-tela="candidatos">Candidatos</button>
-            <button id = "resultado" class="aba" data-tela="resultado">Resultado</button>
-            <hr>
+            <button class="aba ativa" data-tela="votacao">Votar</button>
+            <button class="aba" data-tela="candidatos">Candidatos</button>
+            <button  class="aba" data-tela="resultado">Resultado</button>
+            
         </nav>
+        <hr>
     </header>
 
     <main>
         <section id="votacao" class="tela ativa">
         <div class="urna">
-            <div class="visor">
-                <p class="rotulo">Digite o número do seu candidato</p>
-                <input type="text" id="numerovoto" maxlength="2" inputmode="numeric" autocomplete="off">
-                <div id="previa" class="previa"></div>
-            </div>
-
+            <h2 class="rotulo">Digite o número do seu candidato</h2>
             <div class="botoes-urna">
+                
                 <button id="btnBranco" class="branco">Branco</button>
                 <button id="btnCorrige" class="corrige">Corrige</button>
                 <button id="btnConfirma" class="confirma">Confirma</button>
             </div>
+
+
+            <div class="visor">
+                <input type="text" id="numerovoto" maxlength="2" inputmode="numeric" autocomplete="off">
+                <div id="previa" class="previa"></div>
+            </div>
+
+
         </div>
         <div id="fim" class="fim">Fim</div>
          </section>
