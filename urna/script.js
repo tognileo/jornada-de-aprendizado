@@ -23,7 +23,9 @@ function salvarVotos(votos) {
 
 const abas = document.querySelectorAll(".aba")
 const telas = document.querySelectorAll(".tela")
-
+const fim = document.querySelector(".fim")
+const confirma = document.querySelectorAll(".confirma")
+const btn_voltar = document.querySelector(".btn_voltar")
 abas.forEach(function (aba) {
     aba.addEventListener("click", function () {
         abas.forEach(a => a.classList.remove("ativa"));
@@ -78,7 +80,7 @@ function mostrarCandidatos() {
         <span><strong>${candidato.numero}</strong>-${candidato.nome}</span>
 
         
-        <button onClick="removerCandidato('${candidato.numero}')">Remover</button>`;
+        <button onClick="removerCandidato('${candidato.numero}')" id="remover_candidato">Remover</button>`;
         listaCandidatos.appendChild(li);
     });
 }
@@ -93,7 +95,6 @@ function removerCandidato(numero) {
 
 const inputVoto = document.getElementById("numerovoto");
 const previa = document.getElementById("previa");
-const telaFim = document.getElementById("fim");
 const urna = document.querySelector(".urna");
 
 inputVoto.addEventListener("input", function () { 
@@ -122,11 +123,12 @@ function atualizarPrevia() {
         const votos = carregarVotos();
         votos[chave] = (votos[chave] || 0) + 1;
         salvarVotos(votos);
-        mostrarFim();
+        
     }
 
     document.getElementById("btnConfirma").addEventListener("click", function () {
         const numero = inputVoto.value;
+
 
         if(numero.length < 2) {
             alert("Digite o número do candidato (2 dígitos).");
@@ -135,10 +137,29 @@ function atualizarPrevia() {
         
         const candidato = carregarCandidatos().find(c => c.numero === numero);
         registrarVoto(candidato ? numero : "nulo");
-    });
+        mostrarFim()})
+
+
+
+
+
+    function mostrarFim() {
+        telas.forEach(t => t.classList.remove("ativa"));
+        fim.classList.add("ativa");
+        btn_voltar.classList.add("ativa");
+    }
+
+    document.getElementById("btn_voltar").addEventListener("click", function () {
+        fim.classList.remove("ativa");
+        btn_voltar.classList.remove("ativa");
+        document.getElementById("votacao").classList.add("ativa");
+        limpaUrna();
+    })
+    
 
     document.getElementById("btnBranco").addEventListener("click", function() {
         registrarVoto("branco");
+        mostrarFim()
     });
 
     document.getElementById("btnCorrige").addEventListener("click", limpaUrna);
@@ -149,17 +170,7 @@ function atualizarPrevia() {
         inputVoto.focus();
     }
 
-    function mostrarFim() {
-        urna.style.disp = "none";
-        telaFim.style.display = "block";
 
-
-    setTimeout(function () {
-        telaFim.style.display = "none";
-        urna.style.display = "block";
-        limpaUrna();
-    }, 2000);
-}
 // ----- Resultado
 function mostrarResultado() {
     const candidatos = carregarCandidatos();
@@ -192,7 +203,7 @@ function mostrarResultado() {
 }
 
 document.getElementById("btnZerar").addEventListener("click", function () {
-    if (confirm("Tem certeza que deseha pagar TODOS os votos?")) {
+    if (confirm("Tem certeza que deseja apagar TODOS os votos?")) {
         localStorage.removeItem("votos");
         mostrarResultado();
     }

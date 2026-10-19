@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Urna</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="candidatos.css">
+    <link rel="stylesheet" href="rsultado.css">
 </head>
 <body>
     <header>
@@ -20,38 +22,45 @@
 
     <main>
         <section id="votacao" class="tela ativa">
-        <div class="urna">
-            <h2 class="rotulo">Digite o número do seu candidato</h2>
-            <div class="botoes-urna">
-                
-                <button id="btnBranco" class="branco">Branco</button>
-                <button id="btnCorrige" class="corrige">Corrige</button>
-                <button id="btnConfirma" class="confirma">Confirma</button>
+            <div class="urna">
+                <h2 class="rotulo">Digite o número do seu candidato</h2>
+                <div class="botoes-urna">
+                    
+                    <button id="btnBranco" class="branco">Branco</button>
+                    <button id="btnCorrige" class="corrige">Corrige</button>
+                    <button id="btnConfirma" class="confirma">Confirma</button>
+                </div>
+
+
+                <div class="visor">
+                    <input type="text" id="numerovoto" maxlength="2" inputmode="numeric" autocomplete="off">
+                    <div id="previa" class="previa"></div>
+                </div>
             </div>
+        </section>
 
+        <section>
+            <div id="fim" class="fim">Fim</div>
+            <button id="btn_voltar" class="btn_voltar">Clique aqui para que outra pessoa possa votar.</button>
+        </section>
 
-            <div class="visor">
-                <input type="text" id="numerovoto" maxlength="2" inputmode="numeric" autocomplete="off">
-                <div id="previa" class="previa"></div>
-            </div>
-
-
-        </div>
-        <div id="fim" class="fim">Fim</div>
-         </section>
-
+<!-- ------------------------------------------------------------------->
          <section id="candidatos" class="tela">
-            <h2>Cadastrar candidatos</h2>
-            <form id="formCandidato">
-                <input type="text" id="nomeCandidato" placeholder="Nome do aluno" required>
-                <input type="text" id="numeroCandidato" placeholder="NúMERO (ex:10)" maxlength="2" inputmode="numeric">
-                <button type="submit">Adicionar</button>
-            </form>
+            <div id="separamento">
+                <h2>Cadastrar candidatos</h2>
+                <form id="formCandidato">
+                    <input type="text" id="nomeCandidato" placeholder="Nome do aluno" required>
+                    <input type="text" id="numeroCandidato" placeholder="Numero (ex:10)" maxlength="2" inputmode="numeric">
+                    <button type="submit" id="botao_adicionar">Adicionar</button>
+                </form>
+            </div>
 
-            <h2>Candidatos cadastrados</h2>
-            <ul id="listaCandidatos"></ul>
+            <div id ="separamento2">
+                <h2 id="candidatos_cadastrados">Candidatos cadastrados</h2>
+                <ul id="listaCandidatos"></ul>
+            </div>
          </section>
-
+<!-- ----------------------------------------------------------------- -->
          <section id="resultado" class="tela">
             <h2>Apuração</h2>
             <p id="totalVotos"></p>

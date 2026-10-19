@@ -34,16 +34,15 @@ header{
     font-size: 40px;
 }
 
-
-
 .visor{
     text-align: center;
+    
 }
 .botoes-urna {
     text-align: center;
-    /*o gap so funciona com o display flex e o text aling nao funciona com o flex por isso usa se o justify-content:center*/
+    /*o gap so funciona com o display flex e o text aling nao funciona com o flex por isso usa se o justify-content:center e justify-content nao funciona no display block */
     display: flex;
-    gap: 100px;
+    gap: 100px;/*gap serve para distanciar os filhos dar um espaço entre eles*/
     justify-content:center;
     font-size: 50px;
     padding-bottom: 25px;
@@ -61,31 +60,57 @@ header{
     width: 90px;
     height: 130px;
     border-radius: 10px;
+    font-size: 30px;
+    text-align: center;
+}
 
+
+.previa{
+    font-size: 23px;
+}
+
+
+.tela{
+    display: none;
+}
+
+.tela.ativa {
+    display: block;
+
+}
+
+.aba.ativa{
+    background-color: #B0B0B0;
+    font-weight: bold;
 }
 
 
 
 
 
+.fim{
+    display: none;
+}
+.btn_voltar{
+    display: none;
+}
+.fim.ativa{
+    display: block;
+    text-align: center;
+    font-size: 200px;
+    font-weight: bolder;
+}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+.btn_voltar.ativa{
+    display: block;
+    margin: 0 auto;
+    height: 80px;
+    width: 200px;
+    font-size: 100%;
+    background-color: #B0B0B0;
+    font-weight: bold;
+    border-radius: 10px;
+}
 
 
 
