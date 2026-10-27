@@ -1,0 +1,44 @@
+const nome = document.getElementById("usuario");
+const senha = document.getElementById("senha");
+
+
+document.getElementById("btn_entrar").addEventListener("click",function(){
+    
+    let = localStorage.setItem("nome de usuario", nome.value)
+
+    let senha_criptografada = CryptoJS.SHA512(senha.value).toString()   
+    let = localStorage.setItem("senha", senha_criptografada)
+    window.location.href = 'login.html'
+
+
+}
+)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
