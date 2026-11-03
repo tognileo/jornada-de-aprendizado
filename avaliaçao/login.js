@@ -2,10 +2,6 @@ const usuario_login = document.getElementById("login_usuario");
 const senha_login = document.getElementById("login_senha");
 
 
-
-
-
-
 const senha_cadastrada_no_local_storage = localStorage.getItem("senha")
 
 document.getElementById("btn_entrar_login").addEventListener("click" , function(){
