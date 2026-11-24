@@ -13,10 +13,7 @@ body{
 
 #h1_da_logo{
     font-size: 110%;
-    
-
 }
-
 
 #textos_tela_inicial h1{ 
     font-size: 400%;
@@ -35,39 +32,84 @@ p{
 
 #textos_tela_inicial p{
     font-size: 130%;
-
 }
 
 
 
 #cards{
-    gap: 54%;
+    gap: 7%;
     margin-top: 15%;
-    padding-right: 80%;
-    display: flex;
-    width: 30%;
+    display: flex;  
 }
-
-
-
-#card_img{
-    background-color: #2563EB;
-    height: 110%;
-    margin-top: 40%;
-    width: 400%;
-   
-}
-
 
 
 #cards h1{
     color: #2563EB;
-    
-
+    font-size:100%;
 }
 
-#cards h1{
+h2{
     color: #ffff;
+    font-size: 100%;
     
-
 }
+
+#p_incomodativo{
+    margin-top: -5px;
+}
+
+.botao{
+    background-color:#2563EB ;
+    display: flex;
+    width: 155px;
+    height: 65px;
+    border-radius: 10px;
+    border-color: #2563EB;
+    font-size: 130%;
+    justify-content: center;/* Centraliza na horizontal */
+    display: flex;
+    align-items: center;/* Centraliza na vertical */
+    color: #ffff;
+}
+
+.card_2{
+    width: 200px;
+}
+
+/*----------------------------------------------------------LADO DIREITO------------------------------------------------------------------------------------------------*/
+#card_img{
+    position: absolute;
+    background-color: #2563EB;
+    width: 500px;
+    height: 650px;
+    margin-top: 10%;
+    border-radius: 7%; 
+}
+
+#card_1_img{
+    background-color: #ffff;
+    width: 200px;
+    height: 200px;
+    margin-top: 120%;
+    position: relative;
+    margin-left: 10%;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
