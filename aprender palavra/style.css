@@ -77,6 +77,9 @@ h2{
 }
 
 /*----------------------------------------------------------LADO DIREITO------------------------------------------------------------------------------------------------*/
+#lado_direito {
+    color: black;
+}
 #card_img{
     position: absolute;
     background-color: #2563EB;
@@ -88,28 +91,69 @@ h2{
 
 #card_1_img{
     background-color: #ffff;
-    width: 200px;
+    width: 350px;
     height: 200px;
-    margin-top: 120%;
+    margin-top: 75%;
     position: relative;
     margin-left: 10%;
+    border-radius: 8%;
+    
+    
 }
 
 
 
+#card_2_img{
+    background-color: #000;
+    width: 350px;
+    height: 200px;
+    margin-top: 18%;
+    position: relative;
+    margin-left: 34%;
+    border-radius: 8%;
+}
+
+.palavra {
+    color: #2563EB;
+    font-size: 85%;
+    margin-left: 8%;
+    margin-top: 10px;
+    background-color: #B4C3E0;
+
+}
 
 
+.Pegar_emprestado{
+    color: #000;
+    font-size: 180%;
+    margin-left: 20px;
+    
+}
+
+.Borrow {
+    color: black;
+    font-size: 95%;
+    margin-top: 7%;
+    margin-left: 20px;
+}
+
+.palavras_parecidas{
+    color: #2563EB;
+    font-size: 85%;
+    margin-left: 20px;
+    margin-top:7%;
+}
 
 
+#opcoes {
+    display: flex;
+    gap: 10%;
+    margin-left: 20px;
+    margin-top: -5%;
 
+}
 
-
-
-
-
-
-
-
-
-
+.words {
+    color: #000;
+}
 
